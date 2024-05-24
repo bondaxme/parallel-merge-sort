@@ -6,7 +6,7 @@ public class ParallelMergeSort<T> extends RecursiveAction {
     private int left;
     private int right;
     private Comparator<T> comparator;
-    private int threshold = 100000;
+    private int threshold = 1000;
 
     public ParallelMergeSort(T[] array, int left, int right, Comparator<T> comparator) {
         this.array = array;
@@ -21,10 +21,8 @@ public class ParallelMergeSort<T> extends RecursiveAction {
             sequentialSort(array, left, right, comparator);
         } else {
             int mid = (left + right) / 2;
-            ParallelMergeSort<T> leftTask = new ParallelMergeSort<>(array, left, mid, comparator);
-            ParallelMergeSort<T> rightTask = new ParallelMergeSort<>(array, mid + 1, right, comparator);
-
-            invokeAll(leftTask, rightTask);
+            invokeAll(new ParallelMergeSort<>(array, left, mid, comparator),
+                    new ParallelMergeSort<>(array, mid + 1, right, comparator));
 
             merge(array, left, mid, right, comparator);
         }
