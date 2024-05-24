@@ -1,47 +1,50 @@
+import java.util.Comparator;
 import java.util.concurrent.RecursiveAction;
 
-public class ParallelMergeSort extends RecursiveAction {
-    private Flight[] array;
+public class ParallelMergeSort<T> extends RecursiveAction {
+    private T[] array;
     private int left;
     private int right;
+    private Comparator<T> comparator;
     private int threshold = 100000;
 
-    public ParallelMergeSort(Flight[] array, int left, int right) {
+    public ParallelMergeSort(T[] array, int left, int right, Comparator<T> comparator) {
         this.array = array;
         this.left = left;
         this.right = right;
+        this.comparator = comparator;
     }
 
     @Override
     protected void compute() {
         if (right - left < threshold) {
-            sequentialSort(array, left, right);
+            sequentialSort(array, left, right, comparator);
         } else {
             int mid = (left + right) / 2;
-            ParallelMergeSort leftTask = new ParallelMergeSort(array, left, mid);
-            ParallelMergeSort rightTask = new ParallelMergeSort(array, mid + 1, right);
+            ParallelMergeSort<T> leftTask = new ParallelMergeSort<>(array, left, mid, comparator);
+            ParallelMergeSort<T> rightTask = new ParallelMergeSort<>(array, mid + 1, right, comparator);
 
             invokeAll(leftTask, rightTask);
 
-            merge(array, left, mid, right);
+            merge(array, left, mid, right, comparator);
         }
     }
 
-    public static void sequentialSort(Flight[] array, int left, int right) {
+    public static <T> void sequentialSort(T[] array, int left, int right, Comparator<T> comparator) {
         if (left < right) {
             int mid = (left + right) / 2;
-            sequentialSort(array, left, mid);
-            sequentialSort(array, mid + 1, right);
-            merge(array, left, mid, right);
+            sequentialSort(array, left, mid, comparator);
+            sequentialSort(array, mid + 1, right, comparator);
+            merge(array, left, mid, right, comparator);
         }
     }
 
-    private static void merge(Flight[] array, int left, int mid, int right) {
-        Flight[] temp = new Flight[right - left + 1];
+    private static <T> void merge(T[] array, int left, int mid, int right, Comparator<T> comparator) {
+        T[] temp = (T[]) new Object[right - left + 1];
         int i = left, j = mid + 1, k = 0;
 
         while (i <= mid && j <= right) {
-            if (array[i].getPrice() <= array[j].getPrice()) {
+            if (comparator.compare(array[i], array[j]) <= 0) {
                 temp[k++] = array[i++];
             } else {
                 temp[k++] = array[j++];

@@ -1,8 +1,11 @@
+import java.util.Comparator;
 import java.util.concurrent.ForkJoinPool;
 
 public class Main {
     public static void main(String[] args) {
-        int size = 10000000;
+        int size = 1000000;
+        int numberOfThreads = 2;
+
         Flight[] flights = new Flight[size];
 
         // Заповнення масиву рейсів випадковими даними від 100 до 20000 із заокругленням до 2 знаків після коми
@@ -11,11 +14,11 @@ public class Main {
             flights[i] = new Flight("Flight" + i, price);
         }
 
-
+        Comparator<Flight> priceComparator = Comparator.comparingDouble(Flight::getPrice);
 
         long startTime = System.currentTimeMillis();
-        ForkJoinPool pool = new ForkJoinPool();
-        ParallelMergeSort task = new ParallelMergeSort(flights, 0, flights.length - 1);
+        ForkJoinPool pool = new ForkJoinPool(numberOfThreads);
+        ParallelMergeSort<Flight> task = new ParallelMergeSort<>(flights, 0, flights.length - 1, priceComparator);
 
         pool.invoke(task);
         long endTime = System.currentTimeMillis();
@@ -24,16 +27,16 @@ public class Main {
 
         // Послідовне сортування
         long startTime2 = System.currentTimeMillis();
-        ParallelMergeSort.sequentialSort(flights, 0, flights.length - 1);
+        ParallelMergeSort.sequentialSort(flights, 0, flights.length - 1, priceComparator);
         long endTime2 = System.currentTimeMillis();
 
         System.out.println("Час виконання послідовного сортування: " + (endTime2 - startTime2) + " ms");
 
         // Перевірка чи масив відсортований
-        for (int i = 0; i < size - 1; i++) {
-            if (flights[i].getPrice() > flights[i + 1].getPrice()) {
+        for (int i = 1; i < size; i++) {
+            if (flights[i - 1].getPrice() > flights[i].getPrice()) {
                 System.out.println("Масив не відсортований");
-                return;
+                break;
             }
         }
         System.out.println("Масив відсортований");
