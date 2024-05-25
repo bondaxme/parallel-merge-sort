@@ -3,8 +3,8 @@ import java.util.concurrent.ForkJoinPool;
 
 public class Main {
     public static void main(String[] args) {
-        int size = 1000000;
-        int numberOfThreads = 6;
+        int size = 10000;
+        int numberOfThreads = 8;
 
 
         Building[] buildings = new Building[size];
@@ -17,14 +17,6 @@ public class Main {
 
         Comparator<Building> priceComparator = Comparator.comparingDouble(Building::getPrice);
 
-        long startTime = System.currentTimeMillis();
-        ForkJoinPool pool = new ForkJoinPool(numberOfThreads);
-        ParallelMergeSort<Building> task = new ParallelMergeSort<>(buildings, 0, buildings.length - 1, priceComparator);
-
-        pool.invoke(task);
-        long endTime = System.currentTimeMillis();
-
-        System.out.println("Час виконання: " + (endTime - startTime) + " ms");
 
         long startTime2 = System.currentTimeMillis();
         ParallelMergeSort.sequentialSort(buildings2, 0, buildings2.length - 1, priceComparator);
@@ -32,21 +24,19 @@ public class Main {
 
         System.out.println("Час виконання послідовного сортування: " + (endTime2 - startTime2) + " ms");
 
-        for (int i = 1; i < size; i++) {
-            if (buildings2[i - 1].getPrice() > buildings2[i].getPrice()) {
-                System.out.println("Масив не відсортований");
-                break;
-            }
-        }
-        System.out.println("Масив відсортований");
 
-        for (int i = 0; i < size; i++) {
-            if (buildings[i].getPrice() != buildings2[i].getPrice()) {
-                System.out.println("Масиви не рівні");
-                break;
-            }
-        }
-        System.out.println("Масиви рівні");
+        long startTime = System.currentTimeMillis();
+        ForkJoinPool pool = new ForkJoinPool(numberOfThreads);
+        ParallelMergeSort<Building> task = new ParallelMergeSort<>(buildings, 0, buildings.length - 1, priceComparator);
+
+        pool.invoke(task);
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("Час виконання паралельного сортування: " + (endTime - startTime) + " ms");
+
+        System.out.println("Масив відсортований: " + Test.isSorted(buildings));
+
+        System.out.println("Масиви рівні: " + Test.areEqual(buildings, buildings2));
 
 //        // Speedup
 //        System.out.println("Speedup: " + (double)(endTime2 - startTime2) / (endTime - startTime));
