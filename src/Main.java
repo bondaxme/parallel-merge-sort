@@ -3,7 +3,7 @@ import java.util.concurrent.ForkJoinPool;
 
 public class Main {
     public static void main(String[] args) {
-        int size = 10000;
+        int size = 1000000;
         int numberOfThreads = 8;
 
 
@@ -38,7 +38,6 @@ public class Main {
 
         System.out.println("Масиви рівні: " + Test.areEqual(buildings, buildings2));
 
-//        // Speedup
-//        System.out.println("Speedup: " + (double)(endTime2 - startTime2) / (endTime - startTime));
+        System.out.println("Speedup: " + (double)(endTime2 - startTime2) / (endTime - startTime));
     }
 }

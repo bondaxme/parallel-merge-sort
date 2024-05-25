@@ -12,7 +12,7 @@ public class Test {
 
         int iterations = 20;
         int warmupIterations = 5;
-        int numberOfThreads = 6;
+        int numberOfThreads = 8;
         boolean GENERATE_NEW_ARRAY = false;
 
         Building[] buildings = new Building[size];
@@ -38,20 +38,20 @@ public class Test {
         System.out.println("Прогрівання завершено");
 
 
-//        System.out.println("\n\nЗапуск тестування послідовного алгоритму");
-//        long totalTime = 0;
-//        System.out.println("Час виконання: ");
-//        for (int i = 0; i < iterations; i++) {
-//            Building[] buildingsLocal = buildings.clone();
-//            long startTime = System.currentTimeMillis();
-//                ParallelMergeSort.sequentialSort(buildingsLocal, 0, buildingsLocal.length - 1, priceComparator);
-//            long endTime = System.currentTimeMillis();
-//            System.out.print(i + 1 + ") " + (endTime - startTime) + " ms");
-//            System.out.println("\t Масив відсортований: " + isSorted(buildingsLocal));
-//            totalTime += (endTime - startTime);
-//        }
-//        double averageTime = (double) totalTime / iterations;
-//        System.out.println("\nСередній час виконання послідовного алгоритму: " + averageTime + " ms");
+        System.out.println("\n\nЗапуск тестування послідовного алгоритму");
+        long totalTime = 0;
+        System.out.println("Час виконання: ");
+        for (int i = 0; i < iterations; i++) {
+            Building[] buildingsLocal = buildings.clone();
+            long startTime = System.currentTimeMillis();
+                ParallelMergeSort.sequentialSort(buildingsLocal, 0, buildingsLocal.length - 1, priceComparator);
+            long endTime = System.currentTimeMillis();
+            System.out.print(i + 1 + ") " + (endTime - startTime) + " ms");
+            System.out.println("\t Масив відсортований: " + isSorted(buildingsLocal));
+            totalTime += (endTime - startTime);
+        }
+        double averageTime = (double) totalTime / iterations;
+        System.out.println("\nСередній час виконання послідовного алгоритму: " + averageTime + " ms");
 
 
         System.out.println("\n\nЗапуск тестування паралельного алгоритму");
@@ -81,7 +81,7 @@ public class Test {
         double averageTimeParallel = (double) totalTimeParallel / iterations;
         System.out.println("\nСередній час виконання паралельного алгоритму: " + averageTimeParallel + " ms");
 
-//        System.out.println("\n\nSpeedup: " + (double) totalTime / totalTimeParallel);
+        System.out.println("\n\nSpeedup: " + (double) totalTime / totalTimeParallel);
     }
     public static boolean isSorted(Building[] buildings) {
         for (int i = 1; i < buildings.length; i++) {
