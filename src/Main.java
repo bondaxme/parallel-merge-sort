@@ -7,20 +7,19 @@ public class Main {
         int numberOfThreads = 6;
 
 
-        Building[] flights = new Building[size];
+        Building[] buildings = new Building[size];
 
         for (int i = 0; i < size; i++) {
-            double price = Math.round((100 + Math.random() * 19900) * 100.0) / 100.0;
-            flights[i] = new Building("Flight" + i, price);
+            buildings[i] = new Building("Building" + i, 3000 + Math.random() * 997000);
         }
 
-        Building[] flights2 = flights.clone();
+        Building[] buildings2 = buildings.clone();
 
         Comparator<Building> priceComparator = Comparator.comparingDouble(Building::getPrice);
 
 //        long startTime = System.currentTimeMillis();
 //        ForkJoinPool pool = new ForkJoinPool(numberOfThreads);
-//        ParallelMergeSort<Building> task = new ParallelMergeSort<>(flights, 0, flights.length - 1, priceComparator);
+//        ParallelMergeSort<Building> task = new ParallelMergeSort<>(buildings, 0, buildings.length - 1, priceComparator);
 //
 //        pool.invoke(task);
 //        long endTime = System.currentTimeMillis();
@@ -28,13 +27,13 @@ public class Main {
 //        System.out.println("Час виконання: " + (endTime - startTime) + " ms");
 
         long startTime2 = System.currentTimeMillis();
-        ParallelMergeSort.sequentialSort(flights2, 0, flights2.length - 1, priceComparator);
+        ParallelMergeSort.sequentialSort(buildings2, 0, buildings2.length - 1, priceComparator);
         long endTime2 = System.currentTimeMillis();
 
         System.out.println("Час виконання послідовного сортування: " + (endTime2 - startTime2) + " ms");
 
         for (int i = 1; i < size; i++) {
-            if (flights2[i - 1].getPrice() > flights2[i].getPrice()) {
+            if (buildings2[i - 1].getPrice() > buildings2[i].getPrice()) {
                 System.out.println("Масив не відсортований");
                 break;
             }
