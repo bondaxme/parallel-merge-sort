@@ -17,14 +17,14 @@ public class Main {
 
         Comparator<Building> priceComparator = Comparator.comparingDouble(Building::getPrice);
 
-//        long startTime = System.currentTimeMillis();
-//        ForkJoinPool pool = new ForkJoinPool(numberOfThreads);
-//        ParallelMergeSort<Building> task = new ParallelMergeSort<>(buildings, 0, buildings.length - 1, priceComparator);
-//
-//        pool.invoke(task);
-//        long endTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
+        ForkJoinPool pool = new ForkJoinPool(numberOfThreads);
+        ParallelMergeSort<Building> task = new ParallelMergeSort<>(buildings, 0, buildings.length - 1, priceComparator);
 
-//        System.out.println("Час виконання: " + (endTime - startTime) + " ms");
+        pool.invoke(task);
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("Час виконання: " + (endTime - startTime) + " ms");
 
         long startTime2 = System.currentTimeMillis();
         ParallelMergeSort.sequentialSort(buildings2, 0, buildings2.length - 1, priceComparator);
@@ -39,6 +39,14 @@ public class Main {
             }
         }
         System.out.println("Масив відсортований");
+
+        for (int i = 0; i < size; i++) {
+            if (buildings[i].getPrice() != buildings2[i].getPrice()) {
+                System.out.println("Масиви не рівні");
+                break;
+            }
+        }
+        System.out.println("Масиви рівні");
 
 //        // Speedup
 //        System.out.println("Speedup: " + (double)(endTime2 - startTime2) / (endTime - startTime));
